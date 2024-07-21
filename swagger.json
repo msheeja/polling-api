@@ -1,0 +1,270 @@
+{
+    "openapi": "3.0.0",
+    "info":{
+        "version":"1.0.0",
+        "description":"API for a polling system",
+        "title":"Polling API"
+    },
+    "servers":[
+        {
+            "url":"http://localhost:3000"
+        }
+    ],
+
+    "paths":
+    {
+        "/api/questions/create": 
+        {
+            "post":
+            {
+                "tags": ["Questions"],
+                "summary":"Create",
+                "description":"Create a new question/poll",
+                "requestBody":
+                {
+                    "content":
+                    {
+                        "application/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "serialNum":{
+                                        "type": "integer"
+                                    },
+                                    "question":{
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "serialNum": 1,
+                                    "question": "Who is your favourite from Ninjas mentors?"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201": {
+                        "description":"Successful response"
+                    },
+                    "400": {
+                        "description":"An error occured! Cannot create question!!"
+                    },
+                    "500": {
+                        "description":"Oops! Something went wrong... Please try again later!"
+                    }
+                }
+            }
+        },
+        "/api/questions/": 
+        {
+            "get":
+            {
+                "tags": ["Questions"],
+                "summary":"Get all questions",
+                "description":"All question/polls in the database",
+                "responses":{
+                    "200": {
+                        "description":"Successful response"
+                    },
+                    "400": {
+                        "description": "No questions found!"
+                    },
+                    "500": {
+                        "description":"Oops! Something went wrong... Please try again later!"
+                    }
+                }
+            }
+        },
+        "/api/questions/{id}": {
+            "get":
+            {
+                "tags": ["Questions"],
+                "summary":"Get question by Id",
+                "description":"Get a question by its id",
+                "parameters": [{
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Id of the question to retrieve",
+                        "schema": {
+                            "type": "string"
+                        }
+                }],
+                "responses":{
+                    "200": {
+                        "description":"Successful response"
+                    },
+                    "400": {
+                        "description": "No questions found!"
+                    },
+                    "500": {
+                        "description":"Oops! Something went wrong... Please try again later!"
+                    }
+                }
+            },
+            "delete":
+            {
+                "tags": ["Questions"],
+                "summary":"Delete question by Id",
+                "description":"Delete a question by its id",
+                "parameters": [{
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Id of the question to delete",
+                        "schema": {
+                            "type": "string"
+                        }
+                }],
+                "responses":{
+                    "201": {
+                        "description":"Successful response"
+                    },
+                    "400": {
+                        "description": "One of the option has a vote and cannot be deleted!"
+                    },
+                    "500": {
+                        "description":"Oops! Something went wrong... Please try again later!"
+                    }
+                }
+            }
+        },
+        "/api/questions/{id}/options/create": {
+            "post":
+            {
+                "tags": ["Questions"],
+                "summary":"Add options",
+                "description":"Add options for the question",
+                "parameters": [{
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Id of the question for which options need to be added",
+                        "schema": {
+                            "type": "string"
+                        }
+                }],
+                "requestBody":
+                {
+                    "content":
+                    {
+                        "application/json":{
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "serialNum":{
+                                        "type": "integer"
+                                    },
+                                    "text":{
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "serialNum": 1,
+                                    "text": "Aakash Tyagi"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201": {
+                        "description":"Successful response"
+                    },
+                    "400": {
+                        "description": "An error occured! Cannot add options to the question!!"
+                    },
+                    "500": {
+                        "description":"Oops! Something went wrong... Please try again later!"
+                    }
+                }
+            }
+        },
+        "/api/options/{id}": {
+            "get":
+            {
+                "tags": ["Options"],
+                "summary":"Get all options",
+                "description":"Get all options for the question",
+                "parameters": [{
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Id of the question to retrieve the options for",
+                        "schema": {
+                            "type": "string"
+                        }
+                }],
+                "responses":
+                {
+                    "200": {
+                        "description":"Successful response"
+                    },
+                    "400": {
+                        "description": "No options found!"
+                    },
+                    "500": {
+                        "description":"Oops! Something went wrong... Please try again later!"
+                    }
+                }
+            },
+            "delete":
+            {
+                "tags": ["Options"],
+                "summary": "Delete option",
+                "description": "Delete option with the specified id",
+                "parameters": [{
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Id of the option to delete",
+                        "schema": {
+                            "type": "string"
+                        }
+                }],
+                "responses":
+                {
+                    "201": {
+                        "description":"Successful response"
+                    },
+                    "400": {
+                        "description": "Option has a vote and cannot be deleted!"
+                    },
+                    "500": {
+                        "description":"Oops! Something went wrong... Please try again later!"
+                    }
+                }
+            }
+        },
+        "/api/options/{id}/add_vote": {
+            "put":
+            {
+                "tags": ["Comments"],
+                "summary": "Update vote for an option",
+                "description": "Update/increment vote for an option with the specified id",
+                "parameters": [{
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "description": "Id of the option to update the vote for",
+                        "schema": {
+                            "type": "string"
+                        }
+                }],
+                "responses":
+                {
+                    "201": {
+                        "description": "Successful response"
+                    },
+                    "400": {
+                        "description": "An error occured! Cannot add vote to the option!!"
+                    },
+                    "500": {
+                        "description":"Oops! Something went wrong... Please try again later!"
+                    }
+                }
+            }
+        }
+    }
+}
